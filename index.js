@@ -14,7 +14,7 @@ dotenv.config();
 
 mongoose
 	.connect(
-		"mongodb+srv://dev-mahbub:6Y93fcLAFiHARwt@cluster0.wd5tl.mongodb.net/Shop?retryWrites=true&w=majority",
+		process.env.MONGO_URI,
 		(err) => {
 			if (err) throw err;
 			console.log("DB Connection Successfull!");
