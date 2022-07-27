@@ -50,7 +50,11 @@ router.post("/login", async (req, res) => {
 			);
 
 			const { password, ...others } = user._doc;
-			res.status(200).json({success:'login successfull', isAdmin: user.isAdmin, accessToken });
+			res.status(200).json({
+				success: "login successfull",
+				...others,
+				accessToken,
+			});
 		}
 	} catch (err) {
 		console.log(err);
