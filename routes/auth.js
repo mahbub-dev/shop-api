@@ -2,7 +2,7 @@ const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { verifyToken } = require("./verifyToken");
+const { verifyToken, verifyTokenAndAdmin, verifyTokenAndAuthorization } = require("./verifyToken");
 
 //REGISTER
 
@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
 	}
 });
 
-router.put("/logout", verifyToken, (req, res) => {
+router.post("/logout", (req, res) => {
 	try {
 		const accessToken = jwt.sign(
 			{
