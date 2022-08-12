@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
 				sameSite: "none",
 			})
 				.status(200)
-				.json({ message: "Finished" });
+				.json(accessToken);
 		}
 	} catch (err) {
 		console.log(err);
