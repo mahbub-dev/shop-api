@@ -1,44 +1,51 @@
 const jwt = require("jsonwebtoken");
 
-const verifyToken = (req, res, next) => {
-	const authHeader = req.headers.authorization;
-	if (authHeader) {
-		const token = authHeader.split(" ")[1];
-		jwt.verify(token, process.env.JWT_SEC, (err, user) => {
-			if (err) {
-				console.log(err);
-				res.status(403).json("Token is not valid!");
+const verifyUser = (req, res, next) => {
+	try {
+		const { authorization } = req.headers;
+		if (authorization) {
+			const token = authorization.split(" ")[1];
+			jwt.verify(token, process.env.JWT_SEC, (err, user) => {
+				if (err) {
+					console.log(err);
+					res.status(403).json("Token is not valid!");
+				}
+				req.user = user;
+			});
+			if (!req.user.isAdmin) {
+				console.log("user authorized");
+				next();
 			}
-			req.user = user;
-			next();
-		});
-	} else {
-		return res.status(401).json("You are not authenticated!");
+		} else {
+			return res.status(404).json("You are not a user!");
+		}
+	} catch (e) {
+		next("authorization failed");
+	}
+};
+const verifyAdmin = (req, res, next) => {
+	try {
+		const { authorization } = req.headers;
+		if (authorization) {
+			const token = authorization.split(" ")[1];
+			jwt.verify(token, process.env.JWT_SEC, (err, user) => {
+				if (err) {
+					console.log(err);
+					res.status(403).json("Token is not valid!");
+				}
+				req.user = user;
+			});
+			req.user.isAdmin && next();
+		} else {
+			return res.status(401).json("you are not an admin!");
+		}
+	} catch (e) {
+		next("authorization failed");
 	}
 };
 
-const verifyTokenAndAuthorization = (req, res, next) => {
-	verifyToken(req, res, () => {
-		if (req.user.id === req.params.id || req.user.isAdmin) {
-			next();
-		} else {
-			res.status(403).json("You are not alowed to do that!");
-		}
-	});
-};
-
-const verifyTokenAndAdmin = (req, res, next) => {
-	verifyToken(req, res, () => {
-		if (req.user.isAdmin) {
-			next();
-		} else {
-			res.status(403).json("You are not alowed to do that!");
-		}
-	});
-};
-
 module.exports = {
-	verifyToken,
-	verifyTokenAndAuthorization,
-	verifyTokenAndAdmin,
+	verifyUser,
+	verifyAdmin,
+	// verifyTokenAndAdmin,
 };

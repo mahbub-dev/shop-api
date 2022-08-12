@@ -8,10 +8,9 @@ const productRoute = require("./routes/product");
 const cartRoute = require("./routes/cart");
 const orderRoute = require("./routes/order");
 const stripeRoute = require("./routes/stripe");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
-
 dotenv.config();
-
 mongoose
 	.connect(process.env.MONGO_URI, (err) => {
 		if (err) throw err;
@@ -21,8 +20,9 @@ mongoose
 		console.log(err);
 	});
 
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
