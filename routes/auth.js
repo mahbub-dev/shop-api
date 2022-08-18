@@ -3,78 +3,73 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { verifyAdmin, verifyUser } = require("./verifyToken");
-const { response } = require("express");
+const {
+	signupValidator,
+	loginValidator,
+} = require("../controller/authController");
 
 //REGISTER
-
-router.post("/register", async (req, res) => {
-	const { username, email, password } = req.body.user;
-	const salt = await bcrypt.genSalt(10);
-	const newUser = new User({
-		username,
-		email,
-		password,
-	});
-	newUser.password = await bcrypt.hash(password, salt);
+router.post("/register", signupValidator, async (req, res) => {
 	try {
-		const savedUser = await newUser.save();
-		res.status(201).json({ success: "signup successfull" });
+		const { name, email, password, phone } = req.body.user;
+		const salt = await bcrypt.genSalt(10);
+		const newUser = new User({
+			name,
+			email,
+			phone,
+			password,
+		});
+		newUser.password = await bcrypt.hash(password, salt);
+		await newUser.save();
+		res.status(201).json({ success: { msg: "Signup Successfull" } });
 	} catch (err) {
 		console.log(err);
-		res.status(500).json(err);
+		res.status(500).json("internal server error");
 	}
 });
 
 //LOGIN
-router.post("/login", async (req, res) => {
-	const { email, password } = req.body.user;
+router.post("/login", loginValidator, async (req, res) => {
+	const plainPassword = req.body.user.password;
+	const { email, password } = req.validUser;
 	try {
-		const user = await User.findOne({
-			email: email,
-		});
-		const match = await bcrypt.compare(password, user.password);
-		if (!user) {
-			res.status(401).json("Wrong User Name");
-		} else if (!match) {
-			res.status(401).json("Wrong Password");
+		const match = await bcrypt.compare(plainPassword, password);
+		let err = {};
+		let success = {};
+		if (!match) {
+			err.password = `Password doesn't match`;
+			res.status(401).json({ error: err });
 		} else {
+			success.msg = "Login successful";
 			const accessToken = jwt.sign(
 				{
-					id: user._id,
-					isAdmin: user.isAdmin,
+					id: req.validUser._id,
+					isAdmin: req.validUser.isAdmin,
 				},
 				process.env.JWT_SEC,
 				{ expiresIn: "2d" }
 			);
-			const { password, ...others } = user._doc;
-
-			// res.status(200).json({
-			// 	success: "login successfull",
-			// 	...others,
-			// 	accessToken,
-			// });
-			res.cookie("token", accessToken, {
-				maxAge: 172800000,
-				httpOnly: false,
-				secure: true,
-				sameSite: "none",
-			})
-				.status(200)
-				.json(accessToken);
+			accessToken && (success.token = accessToken);
+			success.user = req.validUser;
+			res.status(200).json({ success });
 		}
-	} catch (err) {
-		console.log(err);
-		res.status(500).json(err);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json("internal server error");
 	}
 });
-router.get("/login/:id", verifyUser, async (req, res) => {
+
+router.get("/login/user/:id", verifyUser, async (req, res) => {
 	try {
+		let success = {};
 		const { id } = req.params;
-		const user = await User.findById({ _id: id });
-		res.status(200).json({ msg: "login successfull", user });
+		console.log(id)
+		const user = await User.find({ _id: id });
+		success.user = user;
+		res.json({ success });
 	} catch (e) {
 		console.log(e);
-		res.status(500).json("login failed");
+		res.status(500).json("internal server error");
 	}
 });
 module.exports = router;
