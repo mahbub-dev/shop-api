@@ -38,7 +38,7 @@ router.post("/login", loginValidator, async (req, res) => {
 		let success = {};
 		if (!match) {
 			err.password = `Password doesn't match`;
-			res.status(401).json({ error: err });
+			res.json({ error: err });
 		} else {
 			success.msg = "Login successful";
 			const accessToken = jwt.sign(
@@ -64,7 +64,7 @@ router.get("/login/user/:id", verifyUser, async (req, res) => {
 		let success = {};
 		const { id } = req.params;
 		console.log(id)
-		const user = await User.find({ _id: id });
+		const user = await User.findOne({ _id: id });
 		success.user = user;
 		res.json({ success });
 	} catch (e) {

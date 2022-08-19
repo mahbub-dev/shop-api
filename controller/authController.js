@@ -33,7 +33,7 @@ const loginValidator = async (req, res, next) => {
 		const user = users[0];
 		if (!user) {
 			err.username = "This email or phone is not registered";
-			res.status(404).json({ error: err });
+			res.json({ error: err }).end();
 		} else {
 			req.validUser = user;
 			next();

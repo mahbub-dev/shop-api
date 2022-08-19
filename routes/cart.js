@@ -5,7 +5,6 @@ const router = require("express").Router();
 //CREATE
 
 router.post("/", verifyUser, async (req, res) => {
-	console.log(req.cookies);
 	const { userId, item, quantity } = req.body.cartData;
 	const { title, color, categories, price, img } = item;
 	const total_price = (quantity || 1) * price;
