@@ -11,12 +11,13 @@ const {
 //REGISTER
 router.post("/register", signupValidator, async (req, res) => {
 	try {
-		const { name, email, password, phone } = req.body.user;
+		const { name, email, password, phone, location } = req.body.user;
 		const salt = await bcrypt.genSalt(10);
 		const newUser = new User({
 			name,
 			email,
 			phone,
+			shipping: location,
 			password,
 		});
 		newUser.password = await bcrypt.hash(password, salt);
@@ -63,7 +64,7 @@ router.get("/login/user/:id", verifyUser, async (req, res) => {
 	try {
 		let success = {};
 		const { id } = req.params;
-		console.log(id)
+		console.log(id);
 		const user = await User.findOne({ _id: id });
 		success.user = user;
 		res.json({ success });
