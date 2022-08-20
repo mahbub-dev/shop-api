@@ -86,7 +86,6 @@ router.post("/:id", verifyUser, async (req, res) => {
 	const { id } = req.params;
 	try {
 		let cart = await Cart.findOne({ userId });
-		console.log(userId)
 		let itemIndex = cart.products.findIndex((p) => p.productId === id);
 
 		if (itemIndex > -1) {
