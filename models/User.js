@@ -5,19 +5,6 @@ const UserSchema = new mongoose.Schema(
 		phone: { type: String, required: true },
 		email: { type: String, required: true },
 		password: { type: String, required: true },
-		billing: [
-			{
-				name: { type: String, required: true },
-				country: { type: String, required: true },
-				state: { type: String, required: true },
-				district: { type: String, required: true },
-				subdistrict: { type: String, required: true },
-				postcode: { type: String, required: true },
-				address: { type: String, required: true },
-				email:{type:String,}
-			},
-			{ default: {} },
-		],
 		img: {
 			type: String,
 			default:

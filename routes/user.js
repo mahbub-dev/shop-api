@@ -1,6 +1,10 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { updateBilling, addBilling } = require("../controller/userController");
+const {
+	updateBilling,
+	addBilling,
+	DeleteBilling,
+} = require("../controller/userController");
 const { verifyUser, verifyAdmin } = require("./verifyToken");
 
 const router = require("express").Router();
@@ -20,12 +24,6 @@ router.put("/:id", verifyUser, async (req, res) => {
 		res.status(500).json(err);
 	}
 });
-
-//Add or update shiping address
-// create billing
-router.post("/billing/:id", addBilling);
-// update billing
-router.put("/billing/:id", updateBilling);
 
 //DELETE
 router.delete("/:id", verifyUser, async (req, res) => {
