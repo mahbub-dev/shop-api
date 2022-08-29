@@ -5,7 +5,7 @@ const BillingSchema = new mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
 		},
-		billings: [
+		address: [
 			{
 				name: { type: String, required: true },
 				email: { type: String, required: true },
@@ -15,10 +15,6 @@ const BillingSchema = new mongoose.Schema(
 			},
 			{ default: {} },
 		],
-		currentBillingId: {
-			type: String,
-			default: "1",
-		},
 	},
 	{ timestamps: true }
 );

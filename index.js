@@ -2,13 +2,12 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const userRoute = require("./routes/user");
+const userRoute = require("./routes/userRoute");
 const billingRoute = require("./routes/billingRouter");
-const authRoute = require("./routes/auth");
-const productRoute = require("./routes/product");
-const cartRoute = require("./routes/cart");
-const orderRoute = require("./routes/order");
-const stripeRoute = require("./routes/stripe");
+const authRoute = require("./routes/authRoute");
+const productRoute = require("./routes/productRoute");
+const cartRoute = require("./routes/cartRoute")
+const orderRoute = require("./routes/orderRoute");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 dotenv.config();
@@ -31,7 +30,6 @@ app.use("/api/products", productRoute);
 app.use("/api/carts", cartRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/billings", billingRoute);
-app.use("/api/checkout", stripeRoute);
 
 app.listen(process.env.PORT || 5000, () => {
 	console.log(`Backend server is running! ${process.env.PORT || 5000}`);

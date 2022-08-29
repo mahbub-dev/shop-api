@@ -17,7 +17,7 @@ const verifyUser = (req, res, next) => {
 				next();
 			}
 		} else {
-			return res.status(404).json("You are not a user!");
+			res.status(404).json("You are not a user!");
 		}
 	} catch (e) {
 		next("authorization failed");

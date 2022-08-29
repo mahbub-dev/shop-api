@@ -1,18 +1,16 @@
 const Billing = require("../models/Billing");
-const response = (error, success, res) => {
-	Object.keys(error).length > 0 ? res.json({ error }) : res.json({ success });
-};
+const response = require("../utils");
 
 // create billing
 const AddBilling = async (req, res) => {
 	let error = {};
 	let success = {};
 	try {
-		const { userId } = req.params;
+		const userId = req.user.id;
 		const { billing } = req.body;
 		let userBilling = await Billing.findOne({ userId });
 		if (userBilling) {
-			let itemIndex = userBilling.billings.findIndex((item) => {
+			let itemIndex = userBilling.address.findIndex((item) => {
 				if (
 					item.email === billing.email ||
 					item.phone === billing.phone
@@ -23,16 +21,14 @@ const AddBilling = async (req, res) => {
 				error.msg =
 					"You have already a billing address with the given email or phone";
 			} else {
-				userBilling.billings.push(billing);
-				success = await userBilling.save();
-				userBilling.currentBillingId = success._id;
+				userBilling.address.push(billing);
 				success = await userBilling.save();
 			}
 			response(error, success, res);
 		} else {
 			const newBilling = await Billing.create({
 				userId,
-				billings: [billing],
+				address: [billing],
 			});
 			success = newBilling;
 			response(error, success, res);
@@ -49,22 +45,29 @@ const UpdateBilling = async (req, res) => {
 	let error = {};
 	let success = {};
 	try {
-		const { userId } = req.params;
+		const userId = req.user.id;
 		const { billing } = req.body;
-		const billingId = `"${billing._id}"`;
+		const { billingId } = req.params;
 		let userBilling = await Billing.findOne({ userId });
+		const userBillingId = JSON.stringify(
+			userBilling.address[0]._id
+		).replace(/"/gi, "");
+
+		console.log(userBillingId);
+		console.log(billingId);
 		if (userBilling) {
-			let itemIndex = userBilling.billings.findIndex((item) => {
-				if (JSON.stringify(item._id) === billingId) return true;
-			});
+			let itemIndex = userBilling.address.findIndex(
+				(item) =>
+					JSON.stringify(item._id).replace(/"/gi, "") === billingId
+			);
 			if (itemIndex > -1) {
-				let item = userBilling.billings[itemIndex];
+				let item = userBilling.address[itemIndex];
 				item.name = billing.name;
 				item.email = billing.email;
 				item.phone = billing.phone;
 				item.address = billing.address;
 				item.postcode = billing.postcode;
-				userBilling.billings[itemIndex] = item;
+				userBilling.address[itemIndex] = item;
 			}
 		} else {
 			error.msg = "not found";
@@ -73,7 +76,7 @@ const UpdateBilling = async (req, res) => {
 		response(error, success, res);
 	} catch (err) {
 		console.log(err);
-		error.server = err;
+		error.server = 'something went wrong';
 		res.json({ error });
 	}
 };
@@ -83,12 +86,12 @@ const DeleteBilling = async (req, res) => {
 	let error = {};
 	let success = {};
 	try {
-		const { userId } = req.params;
-		const id = req.body.email;
+		const userId = req.user.id;
+		const { billingId } = req.params;
 		let userBilling = await Billing.findOne({ userId });
 		if (userBilling) {
-			userBilling.billings = userBilling.billings.filter(
-				(item) => JSON.stringify(item._id) !== `"${id}"`
+			userBilling.address = userBilling.address.filter(
+				(item) => JSON.stringify(item._id) !== `"${billingId}"`
 			);
 			success = await userBilling.save();
 		} else {
@@ -106,7 +109,7 @@ const GetBilling = async (req, res) => {
 	let error = {};
 	let success = {};
 	try {
-		const { userId } = req.params;
+		const userId = req.user.id;
 		let userBilling = await Billing.findOne({ userId });
 		userBilling ? (success = userBilling) : (error.msg = "not found");
 		response(error, success, res);
@@ -116,4 +119,5 @@ const GetBilling = async (req, res) => {
 		res.json({ error });
 	}
 };
+
 module.exports = { UpdateBilling, AddBilling, DeleteBilling, GetBilling };

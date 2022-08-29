@@ -5,15 +5,15 @@ const {
 	DeleteBilling,
 	GetBilling,
 } = require("../controller/billingController");
-const {verifyAdmin,verifyUser} = require('../routes/verifyToken')
+const { verifyAdmin, verifyUser } = require("../controller/verifyToken");
 //Add or update shiping address
 // create billing
-router.post("/:userId", verifyUser,AddBilling);
+router.post("/", verifyUser, AddBilling);
 // update billing
-router.put("/:userId",verifyUser, UpdateBilling);
+router.put("/:billingId", verifyUser, UpdateBilling);
 //delete billing
-router.post("/delete/:userId",verifyUser, DeleteBilling);
+router.delete("/:billingId", verifyUser, DeleteBilling);
 //get billing
-router.get("/:userId",verifyUser, GetBilling);
+router.get("/", verifyUser, GetBilling);
 
 module.exports = router;
