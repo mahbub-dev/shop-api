@@ -49,22 +49,22 @@ const createOrder = async (req, res) => {
 			} else return false;
 		};
 
-		//delete ordered item from cart list
-		let newCartList = [];
-		const deleteCart = async (i) => {
-			cartList.products.splice(i, 1);
-			newCartList = cartList.products;
-		};
 
+		const filteredCartList = cartList.products.filter(
+			(i) =>
+				!orderProductId.includes(
+					JSON.stringify(i._id).replace(/"/gi, "")
+				)
+		);
 		if (orderProductIndex.length > 0) {
 			orderProductIndex.forEach((i) => {
-				const isOrderPlaced = placeOrder(i);
-				isOrderPlaced && deleteCart(i);
+				placeOrder(i);
 			});
-			newCartList.length > 0 && (cartList.products = newCartList);
-			await cartList.save();
 		}
-		// console.log(deleteItems.products);
+
+		//delete ordered item from cart list
+		cartList.products = filteredCartList;
+		await cartList.save();
 		response(error, success, res);
 	} catch (err) {
 		console.log(err);
