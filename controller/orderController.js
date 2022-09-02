@@ -78,7 +78,7 @@ const getOrder = async (req, res) => {
 	let error = {};
 	let success = {};
 	try {
-		success = await Order.findOne({});
+		success = await Order.findOne({userId:req.user.id});
 		response(error, success, res);
 	} catch (err) {
 		error.sever = "somthing went wrong";
