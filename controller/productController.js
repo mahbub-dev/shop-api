@@ -90,10 +90,30 @@ const getAllProduct = async (req, res) => {
 	}
 };
 
+const getSearchProduct = async (req, res) => {
+	let success = {};
+	let error = {};
+	try {
+		const { keyword } = req.params;
+		const products = await Product.find();
+		const filterProducts = products.filter(
+			(i) =>
+				i.title.toLowerCase().includes(keyword.toLowerCase()) ||
+				i.desc.toLowerCase().includes(keyword.toLowerCase())
+		);
+		success = filterProducts;
+		response(error, success, res);
+	} catch (err) {
+		console.log(err);
+		error.server = err;
+		res.json({ error });
+	}
+};
 module.exports = {
 	createPrdouct,
 	updateProduct,
 	deleteProduct,
 	getAllProduct,
+	getSearchProduct,
 	getProduct,
 };

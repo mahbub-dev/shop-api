@@ -35,7 +35,11 @@ const verifyAdmin = (req, res, next) => {
 				}
 				req.user = user;
 			});
-			req.user.isAdmin && next();
+
+			if (req.user.isAdmin) {
+				console.log("admin authorized");
+				next();
+			}
 		} else {
 			return res.status(401).json("you are not an admin!");
 		}

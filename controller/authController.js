@@ -1,14 +1,15 @@
-﻿const User = require("../models/User");
-const bcrypt = require("bcrypt");
+﻿const bcrypt = require("bcrypt");
+const User = require("../models/User");
+const Admin = require("../models/Admin");
 const jwt = require("jsonwebtoken");
 const response = require("../utils");
 // register controller
-const signup = async (req, res) => {
+const Signup = async (Model, req, res) => {
+	let error = {};
+	let success = {};
 	try {
-		let error = {};
-		let success = {};
 		const { phone, email, password, name } = req.body.user;
-		const users = await User.find({
+		const users = await Model.find({
 			$or: [{ email: email }, { phone: phone }],
 		});
 		const user = users[0];
@@ -16,10 +17,10 @@ const signup = async (req, res) => {
 			user.email === email &&
 				(error.email = "This email has already been registered!");
 			user.phone === phone &&
-				(error.phone = "This email has already been registered!");
+				(error.phone = "This phone has already been registered!");
 		} else {
 			const salt = await bcrypt.genSalt(10);
-			const newUser = new User({
+			const newUser = new Model({
 				name,
 				email,
 				phone,
@@ -35,14 +36,12 @@ const signup = async (req, res) => {
 		res.json({ error });
 	}
 };
-
-// login validator
-const login = async (req, res) => {
+const Login = async (Model, req, res) => {
+	let error = {};
+	let success = {};
 	try {
-		let error = {};
-		let success = {};
 		const { username } = req.body.user;
-		const users = await User.find({
+		const users = await Model.find({
 			$or: [{ phone: username }, { email: username }],
 		});
 		const user = users[0];
@@ -75,4 +74,19 @@ const login = async (req, res) => {
 	}
 };
 
-module.exports = { signup, login };
+const userSignup = async (req, res) => {
+	Signup(User, req, res);
+};
+
+const userLogin = async (req, res) => {
+	Login(User, req, res);
+};
+
+const adminSignup = async (req, res) => {
+	Signup(Admin, req, res);
+};
+const adminLogin = async (req, res) => {
+	Login(Admin, req, res);
+};
+
+module.exports = { userSignup, userLogin, adminSignup, adminLogin };

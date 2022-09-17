@@ -5,9 +5,9 @@ const Order = require("../models/Order");
 
 // UPDATE USER
 const updateUser = async (req, res) => {
+	let error = {};
+	let success = {};
 	try {
-		let error = {};
-		let success = {};
 		const updatedUser = await User.findByIdAndUpdate(
 			req.user._id,
 			{

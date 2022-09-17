@@ -5,6 +5,7 @@ const {
 	updateProduct,
 	deleteProduct,
 	getAllProduct,
+	getSearchProduct,
 	getProduct,
 } = require("../controller/productController");
 
@@ -22,5 +23,8 @@ router.get("/:id", getProduct);
 
 //GET ALL PRODUCTS
 router.get("/", getAllProduct);
+
+//GET SEAERCH PRODUCTS
+router.get("/search/:keyword", getSearchProduct);
 
 module.exports = router;
