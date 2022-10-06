@@ -9,6 +9,7 @@ const productRoute = require("./routes/productRoute");
 const cartRoute = require("./routes/cartRoute");
 const orderRoute = require("./routes/orderRoute");
 const couponRoute = require("./routes/getCouponRoute");
+const locationRouter = require('./routes/locationRouter')
 const adminRoute = require("./routes/adminRoute");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -33,6 +34,7 @@ app.use("/api/carts", cartRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/billings", billingRoute);
 app.use("/api/coupons", couponRoute);
+app.use("/api/location", locationRouter);
 app.use("/api/admins", adminRoute);
 
 app.listen(process.env.PORT || 5000, () => {
