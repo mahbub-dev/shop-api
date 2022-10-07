@@ -1,4 +1,4 @@
-﻿const Product = require("../models/Product");
+const Product = require("../models/Product");
 const response = require("../utils");
 
 //CREATE
@@ -116,4 +116,5 @@ module.exports = {
 	getAllProduct,
 	getSearchProduct,
 	getProduct,
+	
 };

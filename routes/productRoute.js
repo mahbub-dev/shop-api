@@ -7,6 +7,7 @@ const {
 	getAllProduct,
 	getSearchProduct,
 	getProduct,
+	
 } = require("../controller/productController");
 
 //CREATE
