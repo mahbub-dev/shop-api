@@ -9,8 +9,8 @@ const productRoute = require("./routes/productRoute");
 const cartRoute = require("./routes/cartRoute");
 const orderRoute = require("./routes/orderRoute");
 const couponRoute = require("./routes/getCouponRoute");
-const locationRouter = require('./routes/locationRouter')
-const adminRoute = require("./routes/adminRoute");
+const locationRouter = require("./routes/locationRouter");
+// const adminRoute = require("./routes/adminRoute");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 dotenv.config();
@@ -35,8 +35,10 @@ app.use("/api/orders", orderRoute);
 app.use("/api/billings", billingRoute);
 app.use("/api/coupons", couponRoute);
 app.use("/api/location", locationRouter);
-app.use("/api/admins", adminRoute);
-
+// app.use("/api/admins", adminRoute);
+app.use((err, req, res, next) => {
+	console.log(err);
+});
 app.listen(process.env.PORT || 5000, () => {
 	console.log(`Backend server is running! ${process.env.PORT || 5000}`);
 });

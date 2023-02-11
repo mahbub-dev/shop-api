@@ -4,7 +4,7 @@ const {
 	UpdateBilling,
 	DeleteBilling,
 	GetBilling,
-} = require("../controller/billingController");
+} = require("../controller/billing/billingController");
 const { verifyAdmin, verifyUser } = require("../controller/verifyToken");
 //Add or update shiping address
 // create billing

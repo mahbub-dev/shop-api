@@ -1,5 +1,5 @@
-const Billing = require("../models/Billing");
-const response = require("../utils");
+const Billing = require("../../models/Billing");
+const response = require("../../utils");
 
 // create billing
 const AddBilling = async (req, res) => {

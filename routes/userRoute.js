@@ -5,7 +5,7 @@ const {
 	deleteUser,
 	getLoginUser,
 	getALlUser,
-} = require("../controller/userController");
+} = require("../controller/user/userController");
 
 //UPDATE
 router.put("/", verifyUser, updateUser);

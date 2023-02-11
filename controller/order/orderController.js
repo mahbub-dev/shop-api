@@ -1,16 +1,16 @@
-﻿const Order = require("../models/Order");
-const Cart = require("../models/Cart");
-const Billing = require("../models/Billing");
+﻿
 var mongoose = require("mongoose");
-const response = require("../utils");
+const response = require("../../utils");
+const orderService = require("./orderService");
 
 // Creating oreder
 const createOrder = async (req, res) => {
-	let success = {};
-	let error = {};
+
 	try {
+		
 		const userId = req.user.id;
 		const orderProductId = req.params.id.split(",");
+		const serviceRes = await orderService.create(userId,orderProductId)
 		const { BillingId } = req.body;
 		const billing = await Billing.findOne({ userId });
 		const selectedBilling = billing.address.filter(

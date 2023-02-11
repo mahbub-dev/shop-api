@@ -8,7 +8,7 @@ const {
 	getSearchProduct,
 	getProduct,
 	
-} = require("../controller/productController");
+} = require("../controller/product/productController");
 
 //CREATE
 router.post("/", verifyAdmin, createPrdouct);
