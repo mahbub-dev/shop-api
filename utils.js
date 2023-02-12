@@ -4,7 +4,7 @@
 
 // create custome instacne
 class customError extends Error {
-	constructor(message, status) {
+	constructor(message, status, stack) {
 		super(message);
 		this.status = status;
 	}

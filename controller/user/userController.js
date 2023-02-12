@@ -26,7 +26,7 @@ const getLoginUser = async (req, res) => {
 	try {
 		const serviceRes = await userService.getLogin(req.user.id);
 		res.status(200).json(serviceRes);
-	} catch (e) {
+	} catch (err) {
 		errorResponse(res, err);
 	}
 };

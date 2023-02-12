@@ -40,13 +40,6 @@ userDB.getLogin = async (_id) => {
 		const user = await User.findOne({ _id });
 		// create default order collection in db
 		if (user) {
-			let userOrder = await Order.findOne({ userId: req.user.id });
-			if (!userOrder) {
-				await Order.create({
-					userId: req.user.id,
-					orders: [],
-				});
-			}
 			return user;
 		} else {
 			createError("user not found", 404);

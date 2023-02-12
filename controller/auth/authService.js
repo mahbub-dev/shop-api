@@ -52,8 +52,8 @@ authService.login = async (data) => {
 						process.env.JWT_SEC,
 						{ expiresIn: "2d" }
 					);
-					user.token = accessToken;
 					const { password, ...rest } = user._doc;
+					rest.token = accessToken;
 					return rest;
 				} else {
 					createError("password doesn't match", 401);

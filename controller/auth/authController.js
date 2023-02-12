@@ -12,7 +12,6 @@ const userSignup = async (req, res) => {
 			name,
 			isAdmin: req.isAdmin,
 		});
-
 		res.status(201).json(serviceRes);
 	} catch (err) {
 		errorResponse(res, err);

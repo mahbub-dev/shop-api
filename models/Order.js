@@ -5,10 +5,14 @@ const OrderSchema = new mongoose.Schema(
 		userId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
-			unique: true,
-			required: true,
 		},
-		orders: { type: Array, required: true },
+		orders: [
+			{
+				product: { type: Object },
+				address: { type: Object },
+				status: { type: String, default: "pending" },
+			},
+		],
 	},
 	{ timestamps: true }
 );
