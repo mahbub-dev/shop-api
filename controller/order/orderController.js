@@ -1,14 +1,14 @@
-﻿var mongoose = require("mongoose");
-const response = require("../../utils");
+﻿const {errorResponse,createError} = require("../../utils");
 const orderService = require("./orderService");
-
+const Order = require("../../models/Order");
 // Creating oreder
 const createOrder = async (req, res) => {
 	try {
 		const userId = req.user.id;
-		const orderProductId = req.params.id.split(",");
-		await orderService.create(userId, orderProductId, req.body);
-		res.status(201).json("order placement successfull");
+		// receive an array of cart ids
+		const { orderCartItemsId, billingId } = req.body;
+		await orderService.create(userId, orderCartItemsId, billingId);
+		res.status(201).json("Order placement successfull");
 	} catch (err) {
 		response.errorResponse(res, err);
 	}
@@ -16,16 +16,13 @@ const createOrder = async (req, res) => {
 
 //Get order
 const getOrder = async (req, res) => {
-	let error = {};
-	let success = {};
-
 	try {
-		success = await Order.findOne({ userId: req.user.id });
-		response(error, success, res);
+		success = await Order.find();
+		if (success.length) {
+			res.status(200).json(success);
+		} else createError("product not found", 204);
 	} catch (err) {
-		error.sever = "somthing went wrong";
-		error.err = err;
-		res.status(500).json({ error });
+		errorResponse(res, err);
 	}
 };
 module.exports = { createOrder, getOrder };

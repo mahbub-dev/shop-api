@@ -6,17 +6,23 @@ const cartDB = {};
 // create cart
 cartDB.create = async (data) => {
 	try {
-		return await Cart.create(data);
+		const cart = await Cart.findOne({
+			$and: [{ userId: data.userId }, { productId: data.productId }],
+		});
+		if (cart) {
+			return cart;
+		} else return await Cart.create(data);
 	} catch (error) {
 		throw error;
 	}
 };
 
 //  delete cart
-cartBD.delete = async (userId, productId) => {
+cartDB.delete = async (userId, productId) => {
 	try {
-		const deletecart = await Cart.findByIdAndDelete(productId);
-        return true
+		return await Cart.findOneAndDelete({
+			$and: [{ productId }, { userId }],
+		});
 	} catch (error) {
 		throw error;
 	}

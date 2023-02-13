@@ -7,8 +7,8 @@ const cartService = require("./cartService");
 const createCart = async (req, res) => {
 	try {
 		const userId = req.user.id;
-		let productId = req.params.id;
-		let { quantity, color, size, total_price } = req.body;
+		// let productId = req.params.id;
+		let { quantity, color, size, total_price, productId } = req.body;
 		const serviceRes = await cartService.create({
 			userId,
 			productId,
@@ -17,6 +17,7 @@ const createCart = async (req, res) => {
 			color,
 			size,
 		});
+		res.status(201).json(serviceRes);
 	} catch (err) {
 		errorResponse(res, err);
 	}
@@ -27,8 +28,8 @@ const deleteCart = async (req, res) => {
 	const userId = req.user.id;
 	const { id } = req.params;
 	try {
-		await cartService.delete(userId, id);
-		res.status(204).json("deleted");
+		const data = await cartService.delete(userId, id);
+		res.status(201).json(data.productId);
 	} catch (err) {
 		errorResponse(res, err);
 	}

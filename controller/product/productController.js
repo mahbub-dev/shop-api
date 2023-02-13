@@ -1,4 +1,4 @@
-const { errorRespons, createError } = require("../../utils");
+const { errorResponse, createError } = require("../../utils");
 const productService = require("./productService");
 const Product = require("../../models/Product");
 
@@ -44,7 +44,7 @@ const getProduct = async (req, res) => {
 			createError("not found", 404);
 		}
 	} catch (err) {
-		errorRespons(res, err);
+		errorResponse(res, err);
 	}
 };
 
@@ -53,7 +53,7 @@ const getAllProduct = async (req, res) => {
 	try {
 		const qNew = req.query.new;
 		const qCategory = req.query.category;
-		const serviceRes = productService.getAll({ qNew, qCategory });
+		const serviceRes = await productService.getAll({ qNew, qCategory });
 		res.status(200).json(serviceRes);
 	} catch (err) {
 		errorRespons(res, err);

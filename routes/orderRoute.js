@@ -1,11 +1,14 @@
 const Order = require("../models/Order");
 const { verifyAdmin, verifyUser } = require("../controller/verifyToken");
-const { createOrder, getOrder } = require("../controller/order/orderController");
+const {
+	createOrder,
+	getOrder,
+} = require("../controller/order/orderController");
 
 const router = require("express").Router();
 
 //CREATE
-router.post("/:id", verifyUser, createOrder);
+router.post("/", verifyUser, createOrder);
 
 //UPDATE
 router.put("/:id", verifyAdmin, async (req, res) => {

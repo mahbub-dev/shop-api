@@ -1,25 +1,27 @@
 const { createError } = require("../../utils");
-const  {createOrder}  = require("./orderDB");
+const { createOrder } = require("./orderDB");
 
 // module scaffholding
 const orderService = {};
 
 //  create order
-orderService.create = async (userId, productIds, billingId) => {
+orderService.create = async (userId, orderCartItemsId, billingId) => {
 	try {
-		const newOrder = new createOrder({ userId, productIds, billingId });
-		// billing address
-		const billingAddress = await newOrder.findBillingAddress();
+		// console.log(orderCartItemsId);
+		const newOrder = new createOrder(userId, orderCartItemsId, billingId);
 		// cart lists
-		let orderProducts = await newOrder.findCartList();
+		let orderCartList = await newOrder.findCartList();
+		console.log(orderCartList);
 		// place order function
 		let isOrderPlaced = true;
-		orderProducts.forEach(async (item) => {
+		orderCartList.forEach(async (item) => {
 			// placing order
-			let userOrder = await newOrder.placeOrder(item, billingAddress);
+			let placement = await newOrder.placeOrder(item);
 			// delete cart item after order place
-			await newOrder.removeOrderItem(orderProducts._id);
-			userOrder ? (isOrderPlaced = true) : (isOrderPlaced = false);
+			if (placement) {
+				await newOrder.removeOrderItem(item._id);
+				isOrderPlaced = true;
+			} else isOrderPlaced = false;
 		});
 		if (!isOrderPlaced) createError("order place failed", 500);
 		return true;

@@ -6,41 +6,35 @@ const Billing = require("../../models/Billing");
 // module scaffholding
 //  create order
 class createOrder {
-	constructor(userId, productIds, billingId) {
+	constructor(userId, orderCartItemsId, billingId) {
 		this.userId = userId;
-		this.productIds = productIds;
+		this.orderCartItemsId = orderCartItemsId;
 		this.billingId = billingId;
 	}
-	// find billing address
-	async findBillingAddress() {
-		try {
-			return await Billing.findOne({
-				userId: this.userId,
-				"address._id": this.billingId,
-			});
-		} catch (error) {
-			throw error;
-		}
-	}
-
 	// find cart list
 	async findCartList() {
 		try {
-			return await Cart.findOne({
-				userId: this.userId,
-				products: { $in: this.productIds },
+			return await Cart.find({
+				// userId: this.userId,
+				_id: { $in: this.orderCartItemsId },
 			});
 		} catch (error) {
 			throw error;
 		}
 	}
-
 	// get order list
-	async placeOrder({ product, address }) {
+	async placeOrder(product) {
 		try {
+			const { size, color, total_price, quantity, productId } = product;
 			return await Order.create({
 				userId: this.userId,
-				orders: [{ product, address }],
+				billingId: this.billingId,
+				productId,
+				size,
+				quantity,
+				total_price,
+				color,
+				price: total_price/quantity,
 			});
 		} catch (error) {
 			throw error;

@@ -15,7 +15,12 @@ cartService.create = async (data) => {
 //  delete cart
 cartService.delete = async (userId, productId) => {
 	try {
-		return await cartDB.delete(userId, productId);
+		const res = await cartDB.delete(userId, productId);
+		if (res !== null) {
+			return res;
+		} else {
+			createError("not found", 401);
+		}
 	} catch (error) {
 		throw error;
 	}

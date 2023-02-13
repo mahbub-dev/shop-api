@@ -5,16 +5,11 @@ const BillingSchema = new mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
 		},
-		address: [
-			{
-				name: { type: String, required: true },
-				email: { type: String, required: true },
-				phone: { type: String, required: true },
-				address: { type: String, required: true },
-				postcode: { type: String, required: true },
-			},
-			{ default: {} },
-		],
+		name: { type: String, required: true },
+		email: { type: String, required: true },
+		phone: { type: String, required: true },
+		address: { type: String, required: true },
+		postcode: { type: String, required: true },
 	},
 	{ timestamps: true }
 );
