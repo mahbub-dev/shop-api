@@ -56,7 +56,7 @@ const getAllProduct = async (req, res) => {
 		const serviceRes = await productService.getAll({ qNew, qCategory });
 		res.status(200).json(serviceRes);
 	} catch (err) {
-		errorRespons(res, err);
+		errorResponse(res, err);
 	}
 };
 

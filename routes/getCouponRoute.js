@@ -1,11 +1,9 @@
 ﻿const router = require("express").Router();
 const Coupon = require("../models/Coupon");
-const response = require("../utils");
+const { errorResponse, createError } = require("../utils");
 const { verifyUser } = require("../controller/verifyToken");
 // coupon code
 router.post("/", verifyUser, async (req, res) => {
-	let error = {};
-	let success = {};
 	try {
 		const userId = req.user.id;
 		const email = req.body.email;
@@ -25,9 +23,9 @@ router.post("/", verifyUser, async (req, res) => {
 		const coupons = await Coupon.findOne({ userId });
 		if (coupons) {
 			if (coupons.coupon.email === email) {
-				success = coupons;
+				res.status(200)
 			} else {
-				error.msg = "invalid email";
+				createError('invalid email',400)
 			}
 		} else {
 			const newCoupon = new Coupon({
@@ -39,11 +37,8 @@ router.post("/", verifyUser, async (req, res) => {
 			});
 			success = await newCoupon.save();
 		}
-
-		response(error, success, res);
 	} catch (err) {
-		console.log(err);
-		res.json({ err });
+		errorResponse(res,err)
 	}
 });
 

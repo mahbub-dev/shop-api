@@ -18,10 +18,13 @@ cartDB.create = async (data) => {
 };
 
 //  delete cart
-cartDB.delete = async (userId, productId) => {
+cartDB.delete = async (userId, _id) => {
 	try {
+		if (_id === "all") {
+			return await Cart.deleteMany({});
+		}
 		return await Cart.findOneAndDelete({
-			$and: [{ productId }, { userId }],
+			$and: [{ $or: [{ _id }, { productId: _id }] }, { userId }],
 		});
 	} catch (error) {
 		throw error;

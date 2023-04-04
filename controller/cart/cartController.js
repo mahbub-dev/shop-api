@@ -8,14 +8,9 @@ const createCart = async (req, res) => {
 	try {
 		const userId = req.user.id;
 		// let productId = req.params.id;
-		let { quantity, color, size, total_price, productId } = req.body;
 		const serviceRes = await cartService.create({
 			userId,
-			productId,
-			total_price,
-			quantity,
-			color,
-			size,
+			...req.body
 		});
 		res.status(201).json(serviceRes);
 	} catch (err) {
@@ -29,7 +24,7 @@ const deleteCart = async (req, res) => {
 	const { id } = req.params;
 	try {
 		const data = await cartService.delete(userId, id);
-		res.status(201).json(data.productId);
+		res.status(204).json(data);
 	} catch (err) {
 		errorResponse(res, err);
 	}

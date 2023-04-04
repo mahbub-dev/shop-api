@@ -13,9 +13,9 @@ cartService.create = async (data) => {
 	}
 };
 //  delete cart
-cartService.delete = async (userId, productId) => {
+cartService.delete = async (userId, cartId) => {
 	try {
-		const res = await cartDB.delete(userId, productId);
+		res = await cartDB.delete(userId, cartId);
 		if (res !== null) {
 			return res;
 		} else {
