@@ -7,8 +7,12 @@ const createOrder = async (req, res) => {
 		const userId = req.user.id;
 		// receive an array of cart ids
 		const { orderCartItemsId, billingId } = req.body;
-		await orderService.create(userId, orderCartItemsId, billingId);
-		res.status(201).json("Order placement successfull");
+		const data = await orderService.create(
+			userId,
+			orderCartItemsId,
+			billingId
+		);
+		res.status(201).json(data);
 	} catch (err) {
 		response.errorResponse(res, err);
 	}
@@ -17,14 +21,22 @@ const createOrder = async (req, res) => {
 //Get order
 const getOrder = async (req, res) => {
 	try {
-		success = await Order.find({ userId: req.user.id })
-			.populate("productId", " _id title img desc")
-			.populate("billingId", "");
-		if (success.length) {
-			res.status(200).json(success);
-		} else createError("product not found", 404);
+		let response = await orderService.getOrder(req.user.id);
+		res.status(200).json(response);
 	} catch (err) {
 		errorResponse(res, err);
 	}
 };
-module.exports = { createOrder, getOrder };
+
+// validate order
+const validateOrder = async (req, res) => {
+	try {
+		const { id, createdAt } = req.params;
+		// console.log(id)
+		await orderService.validateOrder(id, createdAt);
+		res.status(200).json({ validate: "true" });
+	} catch (error) {
+		errorResponse(res, error);
+	}
+};
+module.exports = { createOrder, getOrder, validateOrder };

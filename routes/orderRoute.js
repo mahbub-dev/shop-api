@@ -3,6 +3,7 @@ const { verifyAdmin, verifyUser } = require("../controller/verifyToken");
 const {
 	createOrder,
 	getOrder,
+	validateOrder,
 } = require("../controller/order/orderController");
 
 const router = require("express").Router();
@@ -39,8 +40,8 @@ router.delete("/:id", verifyAdmin, async (req, res) => {
 //GET USER ORDERS
 router.get("/", verifyUser, getOrder);
 
+router.get("/validate/:id/:createdAt", validateOrder);
 // //GET ALL
-
 router.get("/", verifyAdmin, async (req, res) => {
 	try {
 		const orders = await Order.find();

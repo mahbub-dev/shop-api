@@ -26,7 +26,7 @@ class createOrder {
 	async placeOrder(product) {
 		try {
 			const { size, color, total_price, quantity, productId } = product;
-			return await Order.create({
+			const order = Order({
 				userId: this.userId,
 				billingId: this.billingId,
 				productId,
@@ -34,13 +34,34 @@ class createOrder {
 				quantity,
 				total_price,
 				color,
-				price: total_price/quantity,
+				price: total_price / quantity,
 			});
+			return await order.save();
 		} catch (error) {
 			throw error;
 		}
 	}
-
+	// get order
+	async getOrder() {
+		try {
+			let success = await Order.find({ userId: this.userId })
+				.populate("productId", " _id title img desc")
+				.populate("billingId", "");
+			if (success.length) {
+			} else createError("product not found", 404);
+		} catch (error) {
+			throw error;
+		}
+	}
+	async validateOrder(_id, createdAt) {
+		try {
+			const res = await Order.findOne({ $and: [{ _id }, { createdAt }] });
+			!res && createError("product not found", 404);
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	}
 	// async remove order item from cartlist
 	async removeOrderItem(id) {
 		try {
