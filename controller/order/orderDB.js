@@ -41,18 +41,7 @@ class createOrder {
 			throw error;
 		}
 	}
-	// get order
-	async getOrder() {
-		try {
-			let success = await Order.find({ userId: this.userId })
-				.populate("productId", " _id title img desc")
-				.populate("billingId", "");
-			if (success.length) {
-			} else createError("product not found", 404);
-		} catch (error) {
-			throw error;
-		}
-	}
+
 	async validateOrder(_id, createdAt) {
 		try {
 			const res = await Order.findOne({ $and: [{ _id }, { createdAt }] });
@@ -71,4 +60,17 @@ class createOrder {
 		}
 	}
 }
-module.exports = { createOrder };
+// get order
+async function getOrder(userId) {
+	try {
+		let success = await Order.find({ userId })
+			.populate("productId", " _id title img desc")
+			.populate("billingId", "");
+		if (success.length) {
+			return success;
+		} else createError('data not found',404)
+	} catch (error) {
+		throw error;
+	}
+}
+module.exports = { createOrder, getOrder };

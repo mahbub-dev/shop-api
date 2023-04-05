@@ -13,7 +13,6 @@ const verifyUser = (req, res, next) => {
 				req.user = user;
 			});
 			if (!req.user.isAdmin) {
-				console.log("user authorized");
 				next();
 			}
 		} else {

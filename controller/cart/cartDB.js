@@ -8,10 +8,17 @@ cartDB.create = async (data) => {
 	try {
 		const cart = await Cart.findOne({
 			$and: [{ userId: data.userId }, { productId: data.productId }],
-		});
+		}).populate("productId", "title desc img price");
 		if (cart) {
 			return cart;
-		} else return await Cart.create(data);
+		} else {
+			const carts = new Cart(data);
+			const savedCart = await carts.save();
+			return await savedCart.populate(
+				"productId",
+				"title desc img price"
+			);
+		}
 	} catch (error) {
 		throw error;
 	}

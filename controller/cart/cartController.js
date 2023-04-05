@@ -10,7 +10,7 @@ const createCart = async (req, res) => {
 		// let productId = req.params.id;
 		const serviceRes = await cartService.create({
 			userId,
-			...req.body
+			...req.body,
 		});
 		res.status(201).json(serviceRes);
 	} catch (err) {
@@ -33,7 +33,7 @@ const deleteCart = async (req, res) => {
 //GET USER CART
 const getCart = async (req, res) => {
 	try {
-		success = await Cart.find({ userId: req.user.id });
+		const success = await Cart.find({ userId: req.user.id }).populate('productId','title price img desc');
 		res.status(200).json(success);
 	} catch (err) {
 		errorResponse(res, err);

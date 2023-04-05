@@ -1,5 +1,5 @@
 const { createError } = require("../../utils");
-const { createOrder } = require("./orderDB");
+const { createOrder, getOrder } = require("./orderDB");
 
 // module scaffholding
 const orderService = {};
@@ -32,8 +32,8 @@ orderService.create = async (userId, orderCartItemsId, billingId) => {
 // get orders
 orderService.getOrder = async (userId) => {
 	try {
-		const newOrder = new createOrder(userId, null, null);
-		return await newOrder.getOrder();
+		const order = await getOrder(userId);
+		return order;
 	} catch (error) {
 		throw error;
 	}
@@ -43,9 +43,9 @@ orderService.validateOrder = async (id, createdAt) => {
 	try {
 		const newOrder = new createOrder(null, null, null);
 		const validate = await newOrder.validateOrder(id, createdAt);
-		const requestePlaceTime = new Date(createdAt);
 		const validationTime = new Date(validate.createdAt);
-		if (validationTime < requestePlaceTime) {
+	
+		if (validationTime.getTime() + 60000 > new Date().getTime()) {
 			return true;
 		} else createError("validation failed", 400);
 	} catch (error) {
