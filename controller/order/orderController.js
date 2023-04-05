@@ -1,4 +1,4 @@
-﻿const {errorResponse,createError} = require("../../utils");
+﻿const { errorResponse, createError } = require("../../utils");
 const orderService = require("./orderService");
 const Order = require("../../models/Order");
 // Creating oreder
@@ -17,10 +17,12 @@ const createOrder = async (req, res) => {
 //Get order
 const getOrder = async (req, res) => {
 	try {
-		success = await Order.find();
+		success = await Order.find({ userId: req.user.id })
+			.populate("productId", " _id title img desc")
+			.populate("billingId", "");
 		if (success.length) {
 			res.status(200).json(success);
-		} else createError("product not found", 204);
+		} else createError("product not found", 404);
 	} catch (err) {
 		errorResponse(res, err);
 	}

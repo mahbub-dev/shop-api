@@ -38,7 +38,6 @@ productService.getSearch = async (data) => {
 		const res = await productDB.getSearch(data);
 		if (res.lenght > 0) {
 			return res;
-		
 		} else {
 			createError("no result found", 404);
 		}

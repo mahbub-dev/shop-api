@@ -11,7 +11,6 @@ orderService.create = async (userId, orderCartItemsId, billingId) => {
 		const newOrder = new createOrder(userId, orderCartItemsId, billingId);
 		// cart lists
 		let orderCartList = await newOrder.findCartList();
-		console.log(orderCartList);
 		// place order function
 		let isOrderPlaced = true;
 		orderCartList.forEach(async (item) => {

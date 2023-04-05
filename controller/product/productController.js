@@ -8,7 +8,7 @@ const createPrdouct = async (req, res) => {
 		const serviceRes = await productService.create(req.body);
 		res.status(201).json(serviceRes);
 	} catch (err) {
-		errorRespons(res, err);
+		errorResponse(res, err);
 	}
 };
 
@@ -18,7 +18,7 @@ const updateProduct = async (req, res) => {
 		const serivceRes = await productService.update(req.params.id, req.body);
 		res.status(200).json(serivceRes);
 	} catch (err) {
-		errorRespons(res, err);
+		errorResponse(res, err);
 	}
 };
 
@@ -30,7 +30,7 @@ const deleteProduct = async (req, res) => {
 			res.status(200).json("product deleted");
 		} else createError("item not deleted", 400);
 	} catch (err) {
-		errorRespons(res, err);
+		errorResponse(res, err);
 	}
 };
 
@@ -66,7 +66,7 @@ const getSearchProduct = async (req, res) => {
 		const serviceRes = await productService.getSearch(keyword);
 		res.status(200).json(serviceRes);
 	} catch (err) {
-		errorRespons(res, err);
+		errorResponse(res, err);
 	}
 };
 module.exports = {
