@@ -42,7 +42,7 @@ authService.login = async (data) => {
 	try {
 		const { username, password } = data;
 		if (username && password) {
-			const user = await authBD.login(username);
+			const { user, cart } = await authBD.login(username);
 			if (user) {
 				const { password, _id, isAdmin } = user;
 				const match = await bcrypt.compare(data.password, password);
@@ -54,9 +54,9 @@ authService.login = async (data) => {
 					);
 					const { password, ...rest } = user._doc;
 					rest.token = accessToken;
-					return rest;
+					return { user:rest, cart };
 				} else {
-					createError("password doesn't match", 401);
+					createError("Password doesn't match", 401);
 				}
 			} else {
 				createError("user not found", 404);

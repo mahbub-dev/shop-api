@@ -1,4 +1,5 @@
 ﻿const User = require("../../models/User");
+const Cart = require("../../models/Cart.js");
 const { createError } = require("../../utils");
 
 // Module scaffolding
@@ -29,7 +30,12 @@ authDB.login = async (username) => {
 		const user = await User.findOne({
 			$or: [{ phone: username }, { email: username }],
 		});
-		return user;
+		const cart = await Cart.find({ userId: user._id }).populate(
+			"productId",
+			"title price img desc"
+		);
+		
+		return { user, cart };
 	} catch (error) {
 		throw error;
 	}

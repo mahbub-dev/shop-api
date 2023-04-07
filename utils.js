@@ -10,6 +10,7 @@ class customError extends Error {
 	}
 }
 
+
 // create error
 createError = (message, status = "undefined") => {
 	throw new customError(message, status);

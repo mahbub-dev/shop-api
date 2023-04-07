@@ -1,25 +1,23 @@
 const jwt = require("jsonwebtoken");
+const { createError } = require("../utils");
+const { errorResponse } = require("../utils");
 
 const verifyUser = (req, res, next) => {
 	try {
 		const { authorization } = req.headers;
-		if (authorization) {
-			const token = authorization.split(" ")[1];
-			jwt.verify(token, process.env.JWT_SEC, (err, user) => {
-				if (err) {
-					console.log(err);
-					res.status(403).json("Token is not valid!");
-				}
-				req.user = user;
-			});
-			if (!req.user.isAdmin) {
-				next();
+		const token = authorization.split(" ")[1];
+		token === "null" && createError("invalid token found", 400);
+		jwt.verify(token, process.env.JWT_SEC, (err, user) => {
+			if (err) {
+				res.status(403).json("Token is not valid!");
 			}
-		} else {
-			res.status(404).json("You are not a user!");
+			req.user = user;
+		});
+		if (!req.user.isAdmin) {
+			next();
 		}
 	} catch (e) {
-		next("authorization failed");
+		errorResponse(res, e);
 	}
 };
 const verifyAdmin = (req, res, next) => {
