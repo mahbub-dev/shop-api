@@ -52,7 +52,9 @@ productDB.getAll = async (qNew, qCategory) => {
 // get search product
 productDB.getSearch = async (data) => {
 	try {
-		return await Product.find({ title: { $regex: /${data}/i } });
+		return await Product.find(
+			{ title: { $regex: new RegExp(data, "i") } }
+		).exec();
 	} catch (error) {
 		throw error;
 	}
