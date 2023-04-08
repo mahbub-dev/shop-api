@@ -10,6 +10,7 @@ const BillingSchema = new mongoose.Schema(
 		phone: { type: String, required: true },
 		address: { type: String, required: true },
 		postcode: { type: String, required: true },
+		isDefault: { type: Boolean, default: false },
 	},
 	{ timestamps: true }
 );

@@ -5,9 +5,9 @@ const userDB = require("./userDB");
 const userService = {};
 
 // update user
-userService.update = async (updateData) => {
+userService.update = async (userId,updateData) => {
 	try {
-		const res = await userDB.update(updateData);
+		const res = await userDB.update(userId,updateData);
 		if (res) {
 			return res;
 		} else {

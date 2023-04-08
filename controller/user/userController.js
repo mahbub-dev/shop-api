@@ -4,7 +4,10 @@ const { errorResponse } = require("../../utils");
 // UPDATE USER
 const updateUser = async (req, res) => {
 	try {
-		const serviceRes = await userService.update(req.body.update);
+		const serviceRes = await userService.update(
+			req.user.id,
+			req.body.update
+		);
 		res.status(201).json(serviceRes);
 	} catch (err) {
 		errorResponse(res, err);

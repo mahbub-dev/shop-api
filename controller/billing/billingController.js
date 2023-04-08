@@ -32,9 +32,8 @@ const DeleteBilling = async (req, res) => {
 	try {
 		const { billingId } = req.params;
 		let deleteBillings = await Billing.findByIdAndDelete(billingId);
-		deleteBillings
-			? res.status(204)
-			: createError("something went wrong", 500);
+		res.status(200).json("deleted");
+
 	} catch (err) {
 		errorResponse(res, err);
 	}
@@ -42,7 +41,7 @@ const DeleteBilling = async (req, res) => {
 //get billing
 const GetBilling = async (req, res) => {
 	try {
-		let userBilling = await Billing.find({ _id: req.user.id });
+		let userBilling = await Billing.find({ userId: req.user.id });
 		userBilling
 			? res.status(200).json(userBilling)
 			: createError("something went wrong", 400);

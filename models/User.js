@@ -11,6 +11,10 @@ const UserSchema = new mongoose.Schema(
 				"https://simg.nicepng.com/png/small/128-1280406_view-user-icon-png-user-circle-icon-png.png",
 		},
 		isAdmin: { type: Boolean, default: false },
+		default_billing: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Billing",
+		},
 	},
 	{ timestamps: true }
 );

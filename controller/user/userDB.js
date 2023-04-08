@@ -6,15 +6,15 @@ const { createError } = require("../../utils");
 const userDB = {};
 
 // update user
-userDB.update = async (data) => {
+userDB.update = async (userId, data) => {
 	try {
 		return await User.findByIdAndUpdate(
-			req.user._id,
+			userId,
 			{
 				$set: data,
 			},
 			{ new: true }
-		);
+		).populate('default_billing','')
 	} catch (error) {
 		throw error;
 	}
@@ -37,7 +37,7 @@ userDB.delete = async (id) => {
 // get login user
 userDB.getLogin = async (_id) => {
 	try {
-		const user = await User.findOne({ _id });
+		const user = await User.findOne({ _id }).populate("default_billing", "");
 		// create default order collection in db
 		if (user) {
 			return user;
