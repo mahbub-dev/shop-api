@@ -10,7 +10,6 @@ const userSignup = async (req, res) => {
 			email,
 			password,
 			name,
-			isAdmin: req.isAdmin,
 		});
 		res.status(201).json(serviceRes);
 	} catch (err) {

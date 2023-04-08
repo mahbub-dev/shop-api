@@ -14,15 +14,15 @@ authService.signup = async (signupData) => {
 			const salt = await bcrypt.genSalt(10);
 			const { password, ...rest } = signupData;
 			rest.password = await bcrypt.hash(password, salt);
-			isAdmin && (rest.isAdmin = isAdmin);
+	
 			// sending for database process
 			const dbRes = await authBD.signup(rest);
 			if (dbRes.isExist) {
 				let errorSms = {};
 				dbRes.res.email === email &&
-					(errorSms.email = "email registered");
+					(errorSms.email = "email already registered");
 				dbRes.res.phone === phone &&
-					(errorSms.phone = "phone registered");
+					(errorSms.phone = "phone already registered");
 				if (Object.keys(errorSms).length > 0) {
 					createError(JSON.stringify(errorSms), 400);
 				}
